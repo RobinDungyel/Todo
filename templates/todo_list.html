@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-12 col-lg-10">
+    <div class="d-flex justify-content-between align-items-center mb-3 mb-md-4">
+      <h2 class="page-title m-0">Your Todos</h2>
+      <a class="btn btn-primary" href="{% url 'add_todo' %}">Add Todo</a>
+    </div>
+
+    {% if todos %}
+      <div class="vstack gap-3">
+        {% for t in todos %}
+          <div class="card card-ghost">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-start">
+                <div>
+                  <h5 class="card-title mb-1">{{ t.title }}</h5>
+                  {% if t.description %}
+                    <p class="text-muted mb-2">{{ t.description }}</p>
+                  {% endif %}
+                  <small class="text-muted">{{ t.created_at }}</small>
+                </div>
+                <div class="text-nowrap">
+                  {% if t.completed %}
+                    <span class="badge bg-success me-2">Completed</span>
+                  {% endif %}
+                  <a class="btn btn-sm btn-outline-primary" href="{% url 'edit_todo' t.id %}">Edit</a>
+                  <a class="btn btn-sm btn-outline-danger" href="{% url 'delete_todo' t.id %}">Delete</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="card card-ghost">
+        <div class="card-body text-center py-5">
+          <h5 class="mb-2">You have no tasks yet</h5>
+          <p class="text-muted mb-4">Add your first todo to get started</p>
+          <a class="btn btn-primary" href="{% url 'add_todo' %}">Create one</a>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

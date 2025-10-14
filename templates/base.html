@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Todo App</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+      :root { --primary: #6c5ce7; }
+      body { background: #f6f7fb; }
+      .navbar { box-shadow: 0 2px 10px rgba(0,0,0,.05); }
+      .brand-gradient { background: linear-gradient(90deg, var(--primary), #00b894); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+      .card-ghost { border: 0; box-shadow: 0 8px 30px rgba(0,0,0,.06); border-radius: 14px; }
+      .btn-primary { background-color: var(--primary); border-color: var(--primary); }
+      .btn-outline-primary { border-color: var(--primary); color: var(--primary); }
+      .btn-outline-primary:hover { background-color: var(--primary); color: #fff; }
+      .page-title { font-weight: 700; letter-spacing: .3px; }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-white">
+      <div class="container">
+        <a class="navbar-brand fw-bold" href="/"><span class="brand-gradient">TodoApp</span></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav" aria-controls="nav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div id="nav" class="collapse navbar-collapse">
+          <ul class="navbar-nav ms-auto align-items-lg-center">
+            {% if user.is_authenticated %}
+            <li class="nav-item"><a class="nav-link" href="{% url 'todo_list' %}">My Todos</a></li>
+            <li class="nav-item ms-lg-2"><a class="btn btn-sm btn-outline-primary" href="{% url 'logout' %}">Logout</a></li>
+            {% else %}
+            <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login</a></li>
+            <li class="nav-item ms-lg-2"><a class="btn btn-sm btn-primary" href="{% url 'register' %}">Get Started</a></li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <div class="container py-4 py-md-5">
+      {% if messages %}
+        <div class="mb-3">
+        {% for message in messages %}
+          {% with tag=message.tags %}
+            {% if tag == 'error' %}
+              {% with cls='danger' %}
+                <div class="alert alert-{{ cls }} alert-dismissible fade show" role="alert">
+                  {{ message }}
+                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+              {% endwith %}
+            {% else %}
+              <div class="alert alert-{{ tag|default:'info' }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+            {% endif %}
+          {% endwith %}
+        {% endfor %}
+        </div>
+      {% endif %}
+      {% block content %}{% endblock %}
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      // Apply Bootstrap classes to Django default rendered fields
+      (function(){
+        const inputs = document.querySelectorAll('form input, form select, form textarea');
+        inputs.forEach(function(el){
+          if (!el.classList.contains('form-control') && el.type !== 'checkbox' && el.type !== 'radio') {
+            el.classList.add('form-control');
+          }
+          if (el.type === 'checkbox') {
+            el.classList.add('form-check-input');
+            const parent = el.closest('p');
+            if (parent) parent.classList.add('form-check');
+          }
+        });
+        const labels = document.querySelectorAll('form label');
+        labels.forEach(function(l){
+          if (!l.classList.contains('form-label')) l.classList.add('form-label');
+        });
+      })();
+    </script>
+  </body>
+</html>
