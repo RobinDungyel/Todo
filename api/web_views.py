@@ -47,7 +47,13 @@ def logout_view(request):
 @login_required
 def todo_list_view(request):
     todos = Todo.objects.filter(user=request.user)
-    return render(request, 'todo_list.html', {'todos': todos})
+    status_filter = request.GET.get('status')
+    if status_filter == 'completed':
+        todos = todos.filter(completed=True)
+    elif status_filter == 'incomplete':
+        todos = todos.filter(completed=False)
+    # If no filter or 'all', show all todos (default behavior)  
+    return render(request, 'todo_list.html', {'todos': todos, 'status_filter': status_filter})
 
 @login_required
 def add_todo_view(request):

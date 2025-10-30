@@ -7,6 +7,12 @@
       <a class="btn btn-primary" href="{% url 'add_todo' %}">Add Todo</a>
     </div>
 
+    <div class="mb-3">
+      <a href="{% url 'todo_list' %}" class="btn btn-outline-secondary {% if not status_filter %}active{% endif %}">All</a>
+      <a href="{% url 'todo_list' %}?status=completed" class="btn btn-outline-success {% if status_filter == 'completed' %}active{% endif %}">Completed</a>
+      <a href="{% url 'todo_list' %}?status=incomplete" class="btn btn-outline-danger {% if status_filter == 'incomplete' %}active{% endif %}">Incomplete</a>
+    </div>
+
     {% if todos %}
       <div class="vstack gap-3">
         {% for t in todos %}
